@@ -9,6 +9,7 @@ fastapi = "*"
 uvicorn = "*"
 requests = "*"
 pycryptodome = "*"
+websockets = "*"
 
 [dev-packages]
 
