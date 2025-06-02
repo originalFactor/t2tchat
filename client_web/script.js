@@ -194,8 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (newMessages && newMessages.length > 0) {
                 newMessages.forEach(msg => {
                     // Only display messages for the currently selected group
-                    if (msg.gid === selectedGid) {
-                         appendMessage(msg, msg.sender === currentUsername);
+                    if (msg.group_id === selectedGid) {
+                         appendMessage(msg, msg.uid === currentUsername);
                     }
                 });
             }
@@ -211,19 +211,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const senderSpan = document.createElement('div');
         senderSpan.classList.add('sender');
-        senderSpan.textContent = msg.sender;
+        senderSpan.textContent = msg.uid;
 
         const contentSpan = document.createElement('div');
         contentSpan.classList.add('content');
         contentSpan.textContent = msg.content; // Assuming msg.content for text, adjust if it's msg.msg
 
-        const timestampSpan = document.createElement('div');
-        timestampSpan.classList.add('timestamp');
-        timestampSpan.textContent = new Date(msg.timestamp).toLocaleTimeString();
+        // const timestampSpan = document.createElement('div');
+        // timestampSpan.classList.add('timestamp');
+        // timestampSpan.textContent = new Date(msg.timestamp).toLocaleTimeString();
         
         messageElement.appendChild(senderSpan);
         messageElement.appendChild(contentSpan);
-        messageElement.appendChild(timestampSpan);
+        // messageElement.appendChild(timestampSpan);
         
         messagesDiv.appendChild(messageElement);
         messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom

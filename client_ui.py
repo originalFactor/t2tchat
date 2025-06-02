@@ -79,6 +79,16 @@ class Pair(BaseModel):
     gid: str = Field(..., examples=['group'])
     cid: str = Field(..., examples=['client'])
 
+class Status(BaseModel):
+    """登录状态模型
+
+    Attributes:
+        status (bool): 登录状态
+        username (str): 用户名
+    """
+    status: bool
+    username: str | None
+
 @app.get("/", response_class=responses.RedirectResponse)
 async def index():
     """首页重定向到UI
