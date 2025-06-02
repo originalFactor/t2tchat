@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加密聊天室</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="login-view" class="view">
+            <h2>登录</h2>
+            <input type="text" id="username" placeholder="用户名" required>
+            <input type="password" id="password" placeholder="密码" required>
+            <input type="text" id="server_addr" placeholder="服务器地址 (ws://host:port/ws)" value="ws://127.0.0.1:8765/ws" required>
+            <button id="login-btn">登录</button>
+            <p id="login-error" class="error-message"></p>
+        </div>
+
+        <div id="chat-view" class="view" style="display: none;">
+            <div class="sidebar">
+                <div class="user-info">
+                    <h3>当前用户: <span id="current-user"></span></h3>
+                    <button id="logout-btn">登出</button>
+                </div>
+                <div class="group-management">
+                    <h4>群组操作</h4>
+                    <input type="text" id="pair-gid" placeholder="群组ID">
+                    <input type="text" id="pair-cid" placeholder="用户ID (可选, 用于拉人)">
+                    <button id="pair-btn">创建/加入群组</button>
+                     <p id="pair-status" class="status-message"></p>
+                </div>
+                <div class="lists-container">
+                    <div class="list-section">
+                        <h4>已加入群组 (<span id="available-groups-count">0</span>)</h4>
+                        <ul id="available-groups-list"></ul>
+                    </div>
+                    <div class="list-section">
+                        <h4>在线用户 (<span id="clients-count">0</span>)</h4>
+                        <ul id="clients-list"></ul>
+                    </div>
+                    <div class="list-section">
+                        <h4>所有群组 (<span id="all-groups-count">0</span>)</h4>
+                        <ul id="all-groups-list"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="main-chat">
+                <div id="chat-header">
+                    <h2>当前群组: <span id="current-group-id">未选择</span></h2>
+                </div>
+                <div id="messages">
+                    <!-- 消息将显示在这里 -->
+                </div>
+                <div id="message-input">
+                    <input type="text" id="msg-input" placeholder="输入消息...">
+                    <button id="send-btn">发送</button>
+                    <p id="send-status" class="status-message"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -193,7 +193,7 @@ class ChatClient:
 
     async def _handshake(self, client_id: str, group_id: str):
         if client_id not in self.network_clients:
-            return False, "目标终端不存在"
+            return StatusReturn(False, "目标终端不存在")
 
         if group_id not in self.network_groups:
             # 群组不存在，创建新的群组
@@ -202,7 +202,7 @@ class ChatClient:
             self.network_groups.add(group_id)
         else:
             if group_id not in self.group_keys:
-                return False, "群组已被占用"
+                return StatusReturn(False, "群组已被占用")
 
         # 本客户端已加入群组，同步密钥给对方
         encrypted_key = crypto.rsa_encrypt(
@@ -215,7 +215,7 @@ class ChatClient:
                 group_key=crypto.b64encode(encrypted_key),
             )
         )
-        return True, f"已向 {client_id} 发送握手请求，群组: {group_id}"
+        return StatusReturn(True, f"已向 {client_id} 发送握手请求，群组: {group_id}")
 
     def handshake(self, client_id: str, group_id: str):
         """同步发送握手请求
@@ -237,7 +237,7 @@ class ChatClient:
 
     async def _send_message(self, message: bytes, group_id: str):
         if group_id not in self.group_keys:
-            return False, f"未加入群组 {group_id}"
+            return StatusReturn(False, f"未加入群组 {group_id}")
 
         # 发送加密消息
         await self._send(
