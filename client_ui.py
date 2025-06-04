@@ -47,6 +47,18 @@ async def message_callback(data: BaseModel):
     if isinstance(data, Message):
         message_list.append(data)
 
+async def conflict_callback(data: BaseModel):
+    """冲突回调
+
+    Args:
+        data (Conflict): 冲突模型
+    """
+    global client
+    if isinstance(data, Conflict):
+        if client:
+            client.stop()
+            client = None
+
 class Login(BaseModel):
     """登录请求模型
 
@@ -78,16 +90,6 @@ class Pair(BaseModel):
     """
     gid: str = Field(..., examples=['group'])
     cid: str = Field(..., examples=['client'])
-
-class Status(BaseModel):
-    """登录状态模型
-
-    Attributes:
-        status (bool): 登录状态
-        username (str): 用户名
-    """
-    status: bool
-    username: str | None
 
 @app.get("/", response_class=responses.RedirectResponse)
 async def index():
@@ -128,6 +130,7 @@ async def login(r: Login) -> StatusReturn:
         return StatusReturn(False, "Already logged in")
     client = ChatClient(r.username, r.password, r.server_addr)
     client.callback("message", message_callback)
+    client.callback("conflict", conflict_callback)
     return client.run()
 
 @app.get("/logout")
@@ -217,16 +220,26 @@ async def available_groups() -> set[str]:
         return set()
     return set(client.group_keys.keys())
 
+class LoginStatus(BaseModel):
+    """登录状态模型
+
+    Attributes:
+        logged_in (bool): 登录状态
+        username (str | None): 用户名
+    """
+    logged_in: bool
+    username: str | None
+
 @app.get("/status")
-async def status() -> dict:
+async def status() -> LoginStatus:
     """获取当前登录状态
 
     Returns:
         dict: 包含登录状态和用户名的字典
     """
     if client is None:
-        return {"logged_in": False, "username": None}
-    return {"logged_in": True, "username": client.id}
+        return LoginStatus(logged_in=False, username=None)
+    return LoginStatus(logged_in=True, username=client.id)
 
 if __name__ == "__main__":
     import uvicorn
